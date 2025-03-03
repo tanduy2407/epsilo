@@ -17,6 +17,19 @@ CREATE TABLE keyword_search_data (
     FOREIGN KEY (keyword_id) REFERENCES keyword(keyword_id) ON DELETE CASCADE
 );
 
+-- Table: daily_keyword_snapshot (Store snapshot search volume in 9AM or nearest in each day)
+CREATE TABLE daily_keyword_snapshot (
+    snapshot_id BIGINT AUTO_INCREMENT,
+    keyword_id BIGINT NOT NULL,
+    snapshot_datetime DATETIME NOT NULL,
+    search_volume BIGINT NOT NULL,
+    recorded_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (snapshot_id),
+    UNIQUE (keyword_id, recorded_date),
+    FOREIGN KEY (keyword_id) REFERENCES keyword(keyword_id) ON DELETE CASCADE
+);
+
 -- Table: user (Stores user information)
 CREATE TABLE user (
     user_id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
