@@ -1,3 +1,7 @@
+-- Create database keyword_search_volume
+CREATE DATABASE keyword_search_volume_service;
+USE keyword_search_volume_service;
+
 -- Table: keyword (Stores keyword metadata)
 CREATE TABLE keyword (
     keyword_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -6,10 +10,10 @@ CREATE TABLE keyword (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Table: keyword_search_data (Stores hourly search volume)
-CREATE TABLE keyword_search_data (
+-- Table: keyword_search_volume (Stores hourly search volume)
+CREATE TABLE keyword_search_volume (
     keyword_id BIGINT NOT NULL,
-    created_datetime DATETIME NOT NULL,
+    recorded_datetime DATETIME NOT NULL,
     search_volume BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -69,5 +73,5 @@ CREATE TABLE user_subscription (
 
 -- Indexes for performance
 CREATE INDEX idx_keyword_name ON keyword(keyword_name);
-CREATE INDEX idx_recorded_datetime ON keyword_search_data(recorded_datetime);
+CREATE INDEX idx_recorded_datetime ON keyword_search_volume(recorded_datetime);
 CREATE INDEX idx_subscription ON user_subscription(user_id, keyword_id, subscription_type_id);
