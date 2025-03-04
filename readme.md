@@ -153,3 +153,19 @@ Tracks user subscriptions to specific keywords.
 * `keyword_search_volume` and `daily_keyword_snapshot` reference `keyword`.
 * `user_subscription` references `user`, `keyword`, and `subscription_types`.
 * `subscription_types` defines the available subscription levels.
+
+## Daily snapshot
+
+Use a store procedured to capture the daily data at 9AM every day or nearest time of day if 9AM data is not available
+
+###### The challenge that you have overcome
+
+I'm confused about how to retrieve the daily data. In the current solution, I fetch the hourly data at 9 AM each day or the nearest available time if 9 AM is unavailable, considering it as the daily data. Purpose: To determine the search volume of each keyword on a specified date in peak hour.
+
+However, I have another approach: calculating the total sum of search volume from 9 AM on the current day (or the nearest available time) to 9 AM on the previous day (or the nearest available time). Purpose: To calculate the total search volume of each keyword over a 24-hour period, from 9 AM to 9 AM the next day.
+
+###### The challenge that you could not make it work and would like to learn more
+
+I'm having trouble making this approach work and would like to learn more about how to correctly retrieve the daily data. Currently, I fetch the hourly data at 9 AM each day (or the nearest available time if 9 AM is unavailable) and consider it as the daily data.
+
+However, my alternative approach involves calculating the total sum of search volume from 9 AM on the current day (or the nearest available time) to 9 AM on the previous day (or the nearest available time). I haven't been able to implement this successfully and would appreciate any insights on how to do it properly.

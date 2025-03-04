@@ -20,7 +20,7 @@ def get_search_volume():
 		# check if any of input is None
 		if not all([user_id, keywords, timing, start_time, end_time]):
 			return jsonify({'error': 'Missing required parameters'}), 400
-
+		# check the valid timing
 		if timing not in ['hourly', 'daily']:
 			return jsonify({'error': 'Invalid timing parameter'}), 400
 		conn = connect_db()
@@ -29,6 +29,7 @@ def get_search_volume():
 		cursor.execute(
 			"SELECT is_active FROM user WHERE user_id = %s", (user_id))
 		user = cursor.fetchone()
+		# check invalid or inactive user
 		if not user or user['is_active'] == 0:
 			return jsonify({'error': 'Invalid or inactive user'}), 403
 
@@ -89,10 +90,9 @@ def get_search_volume():
 			cursor.execute(query, (keyword, start_time, end_time))
 			data = cursor.fetchall()
 			result[keyword] = [
-				{
-					'timestamp': row['recorded_datetime'].isoformat(),
-					'volume': row['search_volume']
-				} for row in data
+				{'timestamp': row['recorded_datetime'].isoformat(),
+				 'volume': row['search_volume']
+				 } for row in data
 			]
 
 		# Close database connection

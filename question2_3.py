@@ -130,8 +130,8 @@ def generate_daily_snapshot(conn):
 		recorded_date = list(set(recorded_date))
 
 		cursor.execute("""SELECT DATE(snapshot_datetime) AS snapshot_datetime FROM daily_keyword_snapshot
-							GROUP BY DATE(snapshot_datetime)
-							HAVING COUNT(1) = 10""")
+						  GROUP BY DATE(snapshot_datetime)
+						  HAVING COUNT(1) = 10""")
 		snapshot_date = [row['snapshot_datetime'].strftime("%Y-%m-%d")
 						for row in cursor.fetchall()]
 		delta_date = list(set(recorded_date) - set(snapshot_date))

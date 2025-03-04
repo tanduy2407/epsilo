@@ -1,0 +1,5 @@
+Question 1: question1.sql
+Question 2&3: question2_3.py
+Question 4: question4.py
+Question 5: question5.py
+Generate snapshot daily data: question2.sql
