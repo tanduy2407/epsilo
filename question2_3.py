@@ -11,7 +11,7 @@ def connect_db():
         'host': 'localhost',
         'user': 'root',
         'password': 'tanduy2407',
-        'database': 'search_volume_service',
+        'database': 'keyword_search_volume',
         # enable dictionary results
         'cursorclass': pymysql.cursors.DictCursor  
     }
@@ -41,7 +41,7 @@ def generate_keyword_volume_hourly(conn):
     hourly_data = []
     with conn.cursor() as cursor:
         cursor.execute('SELECT keyword_id FROM keyword')
-        keyword_ids = [row[0] for row in cursor.fetchall()]
+        keyword_ids = [row['keyword_id'] for row in cursor.fetchall()]
         current_date = start_date
         # Generate hourly search volume data
         while current_date <= end_date:
@@ -94,9 +94,9 @@ def generate_random_users(conn):
 def generate_subscriptions(conn):
     with conn.cursor() as cursor:
         cursor.execute('SELECT user_id FROM user')
-        user_ids = [row[0] for row in cursor.fetchall()]
+        user_ids = [row['user_id'] for row in cursor.fetchall()]
         cursor.execute('SELECT keyword_id FROM keyword')
-        keyword_ids = [row[0] for row in cursor.fetchall()]
+        keyword_ids = [row['keyword_id'] for row in cursor.fetchall()]
         now = datetime.now()
         subscriptions = []
         for user_id in user_ids:
@@ -123,7 +123,7 @@ def generate_subscriptions(conn):
 if __name__ == '__main__':
     conn = connect_db()
     # generate_keywords(conn)
-    generate_keyword_volume_hourly(conn)
-    generate_random_users(conn)
-    generate_subscriptions(conn)
+    # generate_keyword_volume_hourly(conn)
+    # generate_random_users(conn)
+    # generate_subscriptions(conn)
     conn.close()
