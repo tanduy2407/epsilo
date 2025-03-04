@@ -11,7 +11,9 @@ def connect_db():
         'host': 'localhost',
         'user': 'root',
         'password': 'tanduy2407',
-        'database': 'search_volume_service'
+        'database': 'search_volume_service',
+        # enable dictionary results
+        'cursorclass': pymysql.cursors.DictCursor  
     }
     try:
         conn = pymysql.connect(**DB_CONFIG)
