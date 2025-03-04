@@ -6,23 +6,23 @@ BEGIN
     WITH NearestRecords AS (
         SELECT 
             keyword_id,
-            created_datetime,
+            recorded_datetime,
             search_volume,
-            ABS(TIME_TO_SEC(TIMEDIFF(created_datetime, CONCAT(target_date, ' 09:00:00')))) AS time_diff
-        FROM keyword_search_data
-        WHERE DATE(created_datetime) = target_date
+            ABS(TIME_TO_SEC(TIMEDIFF(recorded_datetime, CONCAT(target_date, ' 09:00:00')))) AS time_diff
+        FROM keyword_search_volume
+        WHERE DATE(recorded_datetime) = target_date
     ),
     RankedRecords AS (
         SELECT 
             keyword_id,
-            created_datetime,
+            recorded_datetime,
             search_volume,
             ROW_NUMBER() OVER (PARTITION BY keyword_id ORDER BY time_diff) AS rn
         FROM NearestRecords
     )
     SELECT 
         keyword_id,
-        created_datetime,
+        recorded_datetime,
         search_volume,
         target_date
     FROM RankedRecords

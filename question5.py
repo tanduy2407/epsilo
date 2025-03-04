@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 from flask import Flask
 import json
 from datetime import datetime
-import pytz
 import question4
 
 
