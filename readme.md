@@ -39,9 +39,6 @@ python -m unittest question5.py -v
 * **-m unittest**: Runs the **unittest** module as a script.
 * **question5.py**: Specifies the test file to run.
 * **-v**: Verbose mode, showing output for each test
-  Example output:
-
-`test_daily_request_success (test_app.TestSearchVolumeService) ... ok test_inactive_user (test_app.TestSearchVolumeService) ... ok test_invalid_datetime_format (test_app.TestSearchVolumeService) ... ok test_invalid_timing (test_app.TestSearchVolumeService) ... ok test_missing_parameters (test_app.TestSearchVolumeService) ... ok test_no_subscriptions (test_app.TestSearchVolumeService) ... ok test_successful_hourly_request (test_app.TestSearchVolumeService) ... ok`
 
 ###### Run a Specific Test
 
