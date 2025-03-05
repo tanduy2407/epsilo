@@ -11,7 +11,7 @@ def connect_db():
 		'host': 'localhost',
 		'user': 'root',
 		'password': 'tanduy2407',
-		'database': 'keyword_search_volume',
+		'database': 'keyword_search_volume_service',
 		'cursorclass': pymysql.cursors.DictCursor  # enable dictionary results
 	}
 	try:
@@ -51,21 +51,17 @@ def generate_keyword_volume_hourly(conn):
 				hours = hours[:random.randint(16, 24)]
 				hours.sort()
 
-				daily_records = []
 				for hour in hours:
 					date_time = current_date.replace(
 						hour=hour, minute=0, second=0)
 					search_volume = random.randint(1000, 50000)
 					hourly_data.append((keyword_id, date_time, search_volume))
-					daily_records.append((date_time, search_volume))
-
 			current_date += timedelta(days=1)
 
 		# Bulk Insert Data
 		insert_query = '''
 			INSERT INTO keyword_search_volume (keyword_id, recorded_datetime, search_volume) 
-			VALUES (%s, %s, %s)
-		'''
+			VALUES (%s, %s, %s)'''
 		cursor.executemany(insert_query, hourly_data)
 		print('Inserted data successfully!')
 	conn.commit()
@@ -123,8 +119,7 @@ def generate_subscriptions(conn):
 def generate_daily_snapshot(conn):
 	with conn.cursor() as cursor:
 		cursor = conn.cursor()
-		cursor.execute(
-			'SELECT DISTINCT recorded_datetime FROM keyword_search_volume')
+		cursor.execute('SELECT DISTINCT recorded_datetime FROM keyword_search_volume')
 		recorded_date = [row['recorded_datetime'].date().strftime("%Y-%m-%d")
 						for row in cursor.fetchall()]
 		recorded_date = list(set(recorded_date))
@@ -142,9 +137,9 @@ def generate_daily_snapshot(conn):
 
 if __name__ == '__main__':
 	conn = connect_db()
-	# generate_keywords(conn)
-	# generate_keyword_volume_hourly(conn)
-	# generate_random_users(conn)
-	# generate_subscriptions(conn)
+	generate_keywords(conn)
+	generate_keyword_volume_hourly(conn)
+	generate_random_users(conn)
+	generate_subscriptions(conn)
 	generate_daily_snapshot(conn)
 	conn.close()

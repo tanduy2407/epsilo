@@ -18,8 +18,10 @@ These 2 file need be the same level
 
 Follow these steps to prepare your environment:
 
-1. Install Dependencies
-   Install the required Python packages using **pip**: pip install flask pymysql pytz
+###### Install Dependencies
+
+
+Install the required Python packages using **pip**: pip install flask pymysql
 
 * **flask**: Web framework for the service.
 * **pymysql**: MySQL driver (mocked in tests, but required by the app).
@@ -156,7 +158,47 @@ Tracks user subscriptions to specific keywords.
 
 Use a store procedured to capture the daily data at 9AM every day or nearest time of day if 9AM data is not available
 
+```sql
+DELIMITER //
+
+CREATE PROCEDURE UpdateDailySnapshotNearest(IN target_date DATE)
+BEGIN
+    INSERT INTO daily_keyword_snapshot (keyword_id, snapshot_datetime, search_volume, recorded_date)
+    WITH NearestRecords AS (
+        SELECT 
+            keyword_id,
+            recorded_datetime,
+            search_volume,
+            ABS(TIME_TO_SEC(TIMEDIFF(recorded_datetime, CONCAT(target_date, ' 09:00:00')))) AS time_diff
+        FROM keyword_search_volume
+        WHERE DATE(recorded_datetime) = target_date
+    ),
+    RankedRecords AS (
+        SELECT 
+            keyword_id,
+            recorded_datetime,
+            search_volume,
+            ROW_NUMBER() OVER (PARTITION BY keyword_id ORDER BY time_diff) AS rn
+        FROM NearestRecords
+    )
+    SELECT 
+        keyword_id,
+        recorded_datetime,
+        search_volume,
+        target_date
+    FROM RankedRecords
+    WHERE rn = 1
+    ON DUPLICATE KEY UPDATE 
+        snapshot_datetime = VALUES(snapshot_datetime),
+        search_volume = VALUES(search_volume);
+END //
+
+DELIMITER ;
+```
+
 ###### The challenge that you have overcome
+
+When designing the database schema, I designed the database to provide sufficient information while limiting the number of fields to maintain consistency and meet business requirements. I had to carefully determine which fields to include—ensuring they were comprehensive enough to support necessary operations without adding unnecessary complexity
 
 I'm confused about how to retrieve the daily data. In the current solution, I fetch the hourly data at 9 AM each day or the nearest available time if 9 AM is unavailable, considering it as the daily data. Purpose: To determine the search volume of each keyword on a specified date in peak hour.
 
@@ -167,3 +209,5 @@ However, I have another approach: calculating the total sum of search volume fro
 I'm having trouble making this approach work and would like to learn more about how to correctly retrieve the daily data. Currently, I fetch the hourly data at 9 AM each day (or the nearest available time if 9 AM is unavailable) and consider it as the daily data.
 
 However, my alternative approach involves calculating the total sum of search volume from 9 AM on the current day (or the nearest available time) to 9 AM on the previous day (or the nearest available time). I haven't been able to implement this successfully and would appreciate any insights on how to do it properly.
+
+I want to schedule a cron job in MySQL to execute a stored procedure at 12 PM each day to retrieve the daily data
