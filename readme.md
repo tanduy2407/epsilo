@@ -58,7 +58,8 @@ The tests in **question5.py** cover the following cases:
 4. **Inactive User** : Request from an inactive user.
 5. **No Subscriptions** : Request for keywords without subscriptions.
 6. **Successful Daily Request** : Valid daily request with data.
-7. **Invalid Datetime Format** : Request with malformed datetime strings.
+7. **Hourly Request with Daily Subscription** : Ensures no hourly data for daily subscribers.
+8. **Invalid Datetime Format** : Request with malformed datetime strings.
 
 # Design the database
 

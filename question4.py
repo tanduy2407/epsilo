@@ -55,7 +55,7 @@ def get_search_volume():
 			sub['keyword_name']: sub['subscription_type'] for sub in subscriptions}
 		# Filter requested keywords based on subscription
 		valid_keywords = [kw for kw in keywords if kw in allowed_keywords]
-		if not valid_keywords:
+		if valid_keywords == []:
 			return jsonify({'error': 'No valid subscriptions for requested keywords'}), 403
 
 		result = {}
